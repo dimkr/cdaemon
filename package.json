@@ -1,6 +1,6 @@
 {
   "name": "cdaemon",
-  "version": "0.0.12",
+  "version": "0.0.13",
   "description": "",
   "main": "index.js",
   "types": "cdaemon.d.ts",
@@ -13,5 +13,9 @@
   "dependencies": {
     "node-addon-api": "^3.0.2",
     "node-gyp": "^7.1.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/dimkr/cdaemon"
   }
 }
