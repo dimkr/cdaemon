@@ -1,0 +1,17 @@
+{
+  "name": "cdaemon",
+  "version": "0.0.12",
+  "description": "",
+  "main": "index.js",
+  "types": "cdaemon.d.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "The Unlicense",
+  "dependencies": {
+    "node-addon-api": "^3.0.2",
+    "node-gyp": "^7.1.2"
+  }
+}

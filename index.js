@@ -1,0 +1,1 @@
+exports.daemonize = require('./build/Release/cdaemon.node').daemonize;
