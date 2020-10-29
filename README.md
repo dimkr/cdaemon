@@ -1,0 +1,1 @@
+`cdaemon` wraps the `daemon()` C function.
