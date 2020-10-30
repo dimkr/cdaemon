@@ -1,56 +1,40 @@
 #ifndef _WIN32
 #   include <unistd.h>
 #endif
-#include <node.h>
+#include <napi.h>
 
 namespace cdaemon {
 
-using v8::Exception;
-using v8::FunctionCallbackInfo;
-using v8::Isolate;
-using v8::Local;
-using v8::NewStringType;
-using v8::Object;
-using v8::Value;
-using v8::String;
-using v8::Boolean;
+using Napi::CallbackInfo;
+using Napi::Object;
+using Napi::String;
+using Napi::Boolean;
 
-void Daemonize(const FunctionCallbackInfo<Value>& args) {
+void Daemonize(const Napi::CallbackInfo& info) {
+    Napi::Env env = info.Env();
     int nochdir = 0, noclose = 0;
-    Isolate* isolate = args.GetIsolate();
 
-    if (args.Length() > 2) {
-        isolate->ThrowException(Exception::TypeError(
-            String::NewFromUtf8(isolate,
-                                "Wrong number of arguments",
-                                NewStringType::kNormal).ToLocalChecked())
-        );
+    if (info.Length() > 2) {
+        Napi::TypeError::New(env, "Wrong number of arguments").ThrowAsJavaScriptException();
+        return;
     }
 
-    if (args.Length() > 0) {
-        if (!args[0]->IsBoolean()) {
-            isolate->ThrowException(Exception::TypeError(
-                String::NewFromUtf8(isolate,
-                                    "Wrong arguments",
-                                    NewStringType::kNormal).ToLocalChecked())
-            );
+    if (info.Length() > 0) {
+        if (!info[0].IsBoolean()) {
+            Napi::TypeError::New(env, "Wrong arguments").ThrowAsJavaScriptException();
             return;
         }
 
-        nochdir = args[0].As<Boolean>()->Value() ? 1 : 0;
+        nochdir = info[0].As<Napi::Boolean>().Value() ? 1 : 0;
     }  
 
-    if (args.Length() > 1) {
-        if (!args[1]->IsBoolean()) {
-            isolate->ThrowException(Exception::TypeError(
-                String::NewFromUtf8(isolate,
-                                    "Wrong arguments",
-                                    NewStringType::kNormal).ToLocalChecked())
-            );
+    if (info.Length() > 1) {
+        if (!info[1].IsBoolean()) {
+            Napi::TypeError::New(env, "Wrong arguments").ThrowAsJavaScriptException();
             return;
         }
 
-        noclose = args[1].As<Boolean>()->Value() ? 1 : 0;
+        noclose = info[1].As<Napi::Boolean>().Value() ? 1 : 0;
     }  
 
 #ifndef _WIN32
@@ -58,10 +42,12 @@ void Daemonize(const FunctionCallbackInfo<Value>& args) {
 #endif
 }
 
-void Initialize(Local<Object> exports, Local<Value> module, void* priv) {
-    NODE_SET_METHOD(exports, "daemonize", Daemonize);
+
+Napi::Object Initialize(Napi::Env env, Napi::Object exports) {
+    exports.Set(Napi::String::New(env, "daemonize"), Napi::Function::New(env, Daemonize));
+    return exports;
 }
 
-NODE_MODULE(NODE_GYP_MODULE_NAME, Initialize)
+NODE_API_MODULE(NODE_GYP_MODULE_NAME, Initialize)
 
 }
